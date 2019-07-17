@@ -1,3 +1,7 @@
 Hola
 que mas ente
+<<<<<<< HEAD
 vinicio hizo una modificacion
+=======
+Entre x2
+>>>>>>> 570e07dd6e30414358bb27203dd0cb79b1904e40
