@@ -1,0 +1,72 @@
+body{background:#FFFFF2; margin:0 auto; height:1000px; overflow:hidden;}
+#main_container{height:600px; width:902px; margin:12px auto;   }
+#logo_section{height:100px; width:902px;  border-radius:5px; -webkit-box-shadow: 0px -1px 13px -1px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px -1px 13px -1px rgba(0,0,0,0.75);
+box-shadow: 0px -1px 13px -1px rgba(0,0,0,0.75);
+}
+#logo{height:100px; width:300px; background:url(../images/bosco2.jpg) no-repeat center; float:left; }
+#college{height:40px; width:600px; float:left; font-size:40px; font-weight:bold; margin-top:5px;}
+#header{height:40px;    width:600px; float:left; font-size:32px; color:#CCCCCC;}
+#controller{background:#E1E1E1; width:902px; height:480px; margin-top:8px; border-radius:5px; -webkit-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);-moz-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);}
+.row{border: black 2px solid;}
+
+.show_details{height:150px;  background:#0C9; width:94%; margin:20px auto; -webkit-box-shadow: -3px 3px 11px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: -3px 3px 11px 0px rgba(0,0,0,0.75);
+box-shadow: -3px 3px 11px 0px rgba(0,0,0,0.75); border-radius:4px; background:#F3F3F3; }
+.book_info{height:36px; width:100%;  border-radius:4px 4px 0 0;  border:1px solid #B6B6B6; background:#D1D1D1;}
+.book_head{padding:9px; font-size:16px; font-weight:bold; color:#339;}
+.list_item{margin:6px 6px 1px -34px;  }
+.list_item li{height:22px;  color:#369; list-style:none; padding:5px; font-weight:600; cursor:pointer; margin:1px; }
+.list_item li a{transition:padding 0.4s , color 0.5s linear 0.2s;}
+.list_item li:hover a{padding-left:15px; color:#060; transition:padding 0.4s , color 0.5s linear 0.2s;}
+#colum_second{height:462px; width:484px; float:left;  margin:8px 0 4px -4px; border-radius:5px;  -webkit-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);
+-moz-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);
+box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75); background:#CCC;}
+.row{ height:150px; width:100%; margin:3px 3px 0 0; border-radius:5px; }
+#book_issue,#book_return,#book_renew,#new_book,#new_student,#remove,#setting,#notice,#notes{height:140px; width:150px; background:#F3F3F3; float:right;  margin:4px 6px 0 0; border-radius:5px; border:#C9C9C9 1px solid; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#book_issue:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#book_return:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#book_renew:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#new_book:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#new_student:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#remove:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#setting:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#notice:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+#notes:hover{background:#FFFFFF; border: 1px solid #666; box-shadow: 0px 2px 2px #999;
+ cursor:pointer; transition: background 0.4s linear 0s , border 0.4s linear 0.2s;}
+.img{height:112px; width:160px; }
+.name{height:28px; width:160px; color:#A851FF; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;  font-size:20px; text-align:center; border-radius:5px;}
+#book_renew_div,#book_return_div,#book_issue_div,#bs_remove_div,#book_entry_div,#member_entry_div,#get_details{height:auto; margin:0 auto; width:900px; -webkit-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);-moz-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);  background:#E1E1E1; display:none; margin-top:6px; border-radius:4px; margin-bottom:100px;}
+.menu_header{height:40px; width:100%; background:#169304; border-radius:4px 4px 0 0; }
+.close{float:right; height:26px; width:40px; padding-top:4px; background:#FF5B5B; margin:6px; color:#EFEFEF; text-align:center; border-radius:2px;
+ font:16px bold "Arial Black", Gadget, sans-serif; cursor:pointer; transition:background 0.4s linear 0.9s;}
+.close:hover{background:#FF0000; color:#FFF; border-radius:2px; transition:background 0.4s linear 0s;}
+#container{height:310px; width:704px; margin:0 auto; margin-top:4px; border:1px solid #F8F8F8; background:#EFEFEF; border-radius:4px;}
+.input_text{border:1px solid #999; height:35px; width:338px; float:left; margin:5px 5px 0 5px; border-radius:4px;  background:#F8F8F8; float:left;}
+#search_box{height:30px;width:100%; }
+#show_result{  margin-left:5px;  float:left; background:#060; height:auto; width:340px;}
+#book_show{ float:right; background:#0C9; height:auto; width:340px; margin-right:8px;}
+.line{height:50px; width:338px; background:#E2E2E2;  border:1px solid #999; border-top:none; cursor:pointer; text-align:left; }
+.line:hover{background:#F5F5F5;}
+.img_style{height:50px; background:#D4D4D4; overflow:hidden; text-align:center; width:50px; margin-bottom:-4px;  float:right;}
+.search_details{height:50px; width:232px; float:left; }
+#other_info{font-size:12px; color:#ACACAC;}
+#run_action{height:100px; width:700px; margin:0 auto; margin-top:4px;}
+  .row1{width:96%; margin:0 auto;  background:#F4F4F4; height:35px; padding:2px; padding-left:10px;}
+  .row2{width:96%;  margin:auto; background:#D4D4D4; height:35px; padding:2px;  padding-left:10px;}
+   .hello{width:550px; float:left; height:auto; font-weight:bold;  color:#000;}
+   .hlw{width:550px; float:left; height:auto; font-weight:bold;  color:#000;}
+  .first{width:180px; height:35px; float:left;   margin-top:5px;}
+  .second{width:67%; height:35px; float:left;  margin-top:2px;  }
+  .error_show{color:#D90000; font-size:14px;}
+#show_search_result{margin-left:345px; }
+#book_edit{display:none;}
+#edit_mem_details{display:none;}
