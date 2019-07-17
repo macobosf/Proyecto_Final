@@ -1,0 +1,331 @@
+-info.php
+
+<?php
+if($_POST)
+{
+	$output = "";
+	$output .= '<div class="show_details" style="margin:6px auto;"><div class="book_info"><div class="book_head">
+	Libro y miembro</div></div><ul class="list_item">'; 
+	require_once 'Connections/connect_to_db.php';
+    if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') 
+	{
+        die("Sorry we only accept ajax request");
+    } 
+	if($_POST["fetch"]==1)
+	{
+		$tot_book = mysqli_query($connect_db,"SELECT id FROM book_entry");
+		$tot_book_count = mysqli_num_rows($tot_book);
+		$output .= '<li><a>Total number of book: '.$tot_book_count.'</a></li>';
+		
+		$avi_book = mysqli_query($connect_db,"SELECT id FROM book_entry WHERE available = 1");
+		$avi_book_count = mysqli_num_rows($avi_book);
+		$output .= '<li><a>Available number of book: '.$avi_book_count.'</a></li>';
+		
+		$tot_mem = mysqli_query($connect_db,"SELECT id FROM member_entry");
+		$tot_mem_count = mysqli_num_rows($tot_mem);
+		$output .= '<li><a>Total number of member: '.$tot_mem_count.'</a></li></ul></div>';
+		
+		$mem_issue = mysqli_query($connect_db,"SELECT * FROM setting WHERE id = 1");
+		$fetch_mem_issue = mysqli_fetch_array($mem_issue);
+		$mem_can_issue = $fetch_mem_issue['take_book_at_once'];
+		$output .= '<div class="show_details" ><div class="book_info"><div class="book_head">Configuración y más</div></div>
+					<ul class="list_item"><li><a>Número de libros que un miembro puede emitir: '.$mem_can_issue.'</a></li>';
+		
+		$mem_can_take = $fetch_mem_issue['fine_after_day'];			
+		$output .= '<li><a>	Cantidad de días que un miembro puede guardar un libro: '.$mem_can_take.'</a></li>';	
+		
+		$late_fine = $fetch_mem_issue['per_day_fine'];
+		$output .= '<li><a>Late fee per day: '.$late_fine.'</a></li></ul></div>';		
+		$tot_fine = mysqli_query($connect_db,"SELECT total_fine_receive FROM fine WHERE id = 1");
+		$total_collected_fine = "<span style='font-size:0.8em; color:#FF8040;'>No se ha cobrado nada todavía</span>";
+		$fe_fine = mysqli_fetch_array($tot_fine);
+		$tot_fine_Ch = $fe_fine['total_fine_receive'];
+		if($tot_fine_Ch > 0)
+		{
+		$total_collected_fine = $tot_fine_Ch;
+		}
+		
+		$output .= '<div class="show_details" style="height:115px;"><div class="book_info"><div class="book_head">
+			Fine Collection</div></div><ul class="list_item"><li><a>Total recibido fino Rs. '.$total_collected_fine.'</a></li>';
+			
+		$uncollected_fine = 0;
+		$un_coll_fine = mysqli_query($connect_db,"SELECT member_fine FROM member_entry");
+		while($fetch_un_coll_fine = mysqli_fetch_array($un_coll_fine))
+		{
+			$un_collected_fine = $fetch_un_coll_fine['member_fine'];
+			if($un_collected_fine > 0)
+			{
+				$uncollected_fine = $uncollected_fine + $un_collected_fine;	
+			}
+		}
+		$output .= '<li><a>Unreceive fine Rs. '.$uncollected_fine.'</a></li></ul></div>';
+		echo $output;
+		
+		
+	}
+	else
+	{
+		header('HTTP/1.1 500 Escribe algo para enviar '.$sender.' ');
+    	exit();
+	}
+}
+?>
+
+---------------------------
+-notes
+
+  <?PHP
+  include 'Connections/connect_to_db.php';
+  if(isset($_POST['pass']) != "")
+  {
+
+		$pass = "";
+		$pass = $_POST['pass'];
+		$check_pass = mysqli_query($connect_db,"SELECT * FROM note_details") or die("Could not connect to database");
+		$data = mysqli_fetch_array($check_pass);
+		$password = $data['password'];
+		if($pass != $password)
+		{
+			echo "Password doesn't match !!! Try again";
+			
+		}
+		else
+		{
+		  session_start();
+		  header("Location:notes_admin.php");	
+		   $_SESSION['password'] = "Userlogin";
+		}
+	}
+
+  else
+  {
+	echo "fail";  
+  }
+  
+  ?>
+
+---------------------------------------
+-notes_admin
+
+<?PHP
+session_start();
+include 'Connections/connect_to_db.php';
+if(isset($_SESSION['password']))
+{
+	if($_SESSION['password'] != "")
+	{
+		$input_password = preg_replace('#[^A-Za-z0-9]#i', '', $_SESSION['password']);
+		$sql_query = mysqli_query($connect_db,"SELECT * FROM security WHERE id = 1 AND password = '$input_password'") or die("No se pudo interactuar con el sistema");
+		$check = mysqli_num_rows($sql_query);
+		if($check == 0)
+		{
+			//Confirm that user not exist not database
+			header("location:notes_main.php?msg=your_information_are_not_recorded_in_our_system");
+			session_destroy();
+			exit;
+		}
+		else if($check != 1)
+		{
+			header("location:notes_main.php?msg=Something_went_wrong");
+			
+		}
+	}
+}
+else{
+	header("location:notes_main.php?message=your_session_is_expired");
+	}
+$show_result ="";
+$fetch_notes = mysqli_query($connect_db,"SELECT * FROM notes ORDER BY id DESC LIMIT 10");
+if(mysqli_num_rows($fetch_notes) > 0)
+{
+while($fetch_notes_now = mysqli_fetch_array($fetch_notes))
+{
+   	$note_title = $fetch_notes_now['Title'];
+	$note_body = $fetch_notes_now['note'];
+	$note_id = $fetch_notes_now['id'];
+	$note_time = strftime("%b %d, %Y", strtotime($fetch_notes_now['note_time']));
+	$show_result .= '
+	<div style="padding:5px;">
+ 
+}   	<div id="note_tit" onClick="javascript:show('.$note_id.');">
+       <div style="padding:12px; font-size:15px; font-weight:bold; color:#FFF;">'.ucfirst($note_title).'</div>
+        <div id="note_del">
+       <a href="notes_admin.php?deleteid='.$note_id.'"><img src="images/delete.png" height="15" width="15" /></a></div>
+       <div style="float:right; margin:-15px 80px 0 0; font-size:13px; color:#DFDFDF;">Recorded On:&nbsp;'.$note_time.'</div>
+       </div>
+             <div id="'.$note_id.'" class="note_show_style" ><div style="padding:10px;">'.ucfirst($note_body).'</div></div>
+             
+    </div>';
+}
+else
+{
+  $show_result .= '<div style="height:30px; color:#F0F; font-weight:bold; padding:10px;">No se encontraron notas</div>';	
+}
+?>
+<html>
+<head>
+<title>Administración</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<style>
+#note_tit{height:46px; width:98%; margin:-2px auto; background:#7592F4; border-radius:4px; }
+#note_del{width:20px; height:20px; float:right; margin:-30px 10px 0 -2px; display:none}
+#note_tit:hover{background:#818CF5; cursor:pointer;}
+#note_tit:hover > #note_del{display:block; }
+.note_show_style {height:auto; min-height:40px; width:98%; display:none; background:#BACCFC; margin:0 auto; border-radius:0 0 4px 4px; }
+</style>
+<body>
+<?PHP include'header.php'; ?>
+<div style="height:auto; width:100%; -webkit-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);-moz-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);  background:#E1E1E1; margin-top:6px; border-radius:4px; padding-bottom:10px;">
+<div style="height:80px; padding:10px;">
+<a href="index.php"><div style="float:left; border-radius:4px; color:#CCC; font-weight:bold; height:18px; width:40px; background:#090; padding:8px; margin-right:20px;">Casa</div></a>
+<div style="height:auto; width:90%; float:left; margin:0 auto;  border-radius:4px; border:1px solid #F2F2F2; background:#D8D8D8;">
+<div style="margin:10px; font-weight:bold; font-size:14px; color:#660000;">Crear nueva nota</div>
+<div style="margin-left:10px; float:left;"><input type="text" placeholder=" Notes title" name="title" id="title" style="height:30px; border-radius:4px; border:1px solid #999; "  /></div>
+<div style="float:left; height:60px; width:62%;margin:-30px 15px 10px 20px;"><textarea style="height:60px; width:100%; border-radius:4px;" placeholder=" Write your note" id="write_note"></textarea></div>
+<div style="float:left; margin-top:-20px; "><input type="button" onClick="return valid();" name="save_note" value="Save Note" style="height:30px; width:auto; border-radius:4px; border:1px solid #999;"/>
+<div id="success_show" style="height:20px; padding:4px; width:60px; display:none; margin:0 auto;">
+<img src="images/yesIcon.png" height="23" width="30" style="margin-left:15px;" /></div>
+</div>
+</div>
+</div>
+<?php 
+if (isset($_GET['deleteid'])) {
+	echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ¿De verdad quieres borrar esta nota?&nbsp;&nbsp;&nbsp; <a href="notes_admin.php?yesdelete=' . $_GET['deleteid'] . '">Yes</a> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="notes_admin.php">No</a>';
+	exit();
+}
+if (isset($_GET['yesdelete'])) {
+	$id_to_delete = $_GET['yesdelete'];
+	$del_query = mysqli_query($connect_db,"DELETE FROM notes WHERE id='$id_to_delete' LIMIT 1") or die (mysqli_error($sql));
+	echo '<META HTTP-EQUIV=Refresh //CONTENT="0; URL=notes_admin.php">';
+}
+?>
+<div style=" margin:0 auto; padding:10px 0 10px 0; border-radius:4px; width:98%;">
+
+
+<?PHP echo $show_result; ?>
+
+
+</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="js/jquery-1.4.3.min.js" ></script>
+<script>
+function show(x)
+{
+	if($('#'+x).is(":hidden"))
+	{
+		$('#'+x).slideDown(100);
+	}
+	else
+	{
+		$('#'+x).slideUp(100);
+	}
+	
+}
+function valid()
+{
+	var title_text = document.getElementById('title').value ;
+	var nt_body = document.getElementById('write_note').value;
+	if(title_text == "" || title_text == null)
+	{
+	title.focus();
+	return false;
+	}	
+	else if(title_text.length < 3)
+	{
+		alert("Title is very short");
+		return false;
+	}
+	else if(nt_body == "" || nt_body == null)
+	{
+	write_note.focus();
+	return false;	
+	}
+	else if(nt_body.length < 10)
+	{
+		alert("El cuerpo de la nota debe tener al menos 10 caracteres");
+		return false();	
+	}
+	else
+	{
+		document.getElementById('title').value="";
+		document.getElementById('write_note').value = "";
+		
+		$.ajax({
+			type:"POST",
+			url:"post_notes_on_db.php",
+			data:{note_title:title_text , note_body:nt_body},
+			success: function()
+			{
+			$('#success_show').slideDown(500);
+		    $('#success_show').slideUp(5);
+			setTimeout("location.reload(true);",800);
+			}
+			});
+		
+	}
+
+}
+</script>
+
+-----------------------------------------------
+-notes_main
+
+<?PHP
+include 'Connections/connect_to_db.php';
+session_start();
+$error_msg = "";
+if (isset($_SESSION["password"])) 
+{
+	header("location:notes_admin.php?msg=Due_to_our_session_we_automatically_redirect_you_in_notes_admin_page");
+	exit();
+}
+if(isset($_POST['get_notes']))
+{
+	if($_POST['pass'] == "")
+	{
+		$error_msg = "Ingresa tu contraseña";
+	}
+	else
+	{
+	$pass =  preg_replace('#[^A-Za-z0-9]#i', '',$_POST['pass']);	
+	$sql_query = mysqli_query($connect_db,"SELECT * FROM security WHERE id = 1 AND password = '$pass'") or die("Temporary problem occurs");
+	$check = mysqli_num_rows($sql_query);
+	if($check == 0)
+	{
+		$error_msg = "La contraseña no coincide";
+	}
+	else if($check == 1)
+	{
+		 $_SESSION['password']= $pass;
+	 	 header("Location:notes_admin.php");	
+	}
+ }
+}
+
+?>
+<html>
+<head><title>Notas de acceso</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body style="height:800px;">
+<?PHP include 'header.php'; ?>
+<div id="note_div" style="-webkit-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);-moz-box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);box-shadow: -1px 2px 14px -1px rgba(0,0,0,0.75);  background:#E1E1E1; border-radius:4px; height:510px; width:100%; margin-top:6px;">
+<div class="menu_header"><div style="height:30px; width:auto; font-weight:bold; padding:4px 10px 0 10px; border-radius:5px; color:#FFF; font:1.4em; float:left; ">Notas</div><a href="http://localhost/project/index.php"><div class="close">X</div></a></div>
+<div style="padding:50px;"> <form method="post" name="nform">
+  <div style="margin:0 auto; width:40%; font:19px; background:#E1E1E1; border:1px solid #999999; text-align:center;
+   border-radius:6px; font-weight:bold; border:1px #666666 solid;  height:200px;"><marquee style=" border-radius:6px 6px 0 0; padding:10px; height:22px; background:#057E14; color:#FFFFFF;"> Contraseña protegida</marquee><br />
+<input type="password" id="pass" name="pass" placeholder="Enter your password" style="height:30px; width:240px; border-radius:4px; background:#F8F8F8; border:1px #666666 solid; margin-top:20px;"/><br />
+<input type="submit" name="get_notes" id="get_notes" value="Get Notes"  style="height:30px; color:#CCC; width:80px; border-radius:4px; margin-top:10px; background:#0A8313; border:1px #1D8B2B solid;" /><br /><br />
+<span id="error_login_msg" style="color:#F00; font-size:13px;"><?PHP  echo $error_msg; ?></span></div></form></div>
+</div><!--End of note_div from here-->
+</body>
+</html>
+
+
+
+
+
+
